@@ -1,11 +1,25 @@
 const express = require('express')
 const router = express.Router()
 
+const multer = require('multer');
+const path = require('path');
 
 
 
 const { index } = require('./../app/controllers/home')
-const { addProduct, viewProducts, viewSingleProduct } = require('./../app/controllers/productController')
+const { addProduct, viewProducts, viewSingleProduct, updateProduct } = require('./../app/controllers/productController')
+const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/controllers/userController')
+const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/controllers/leadController')
+
+
+const storage = multer.diskStorage({
+    destination : './public/uploads',
+    filename : (req, file, cb)=>{
+        cb(null, file.fieldname +'-' + Date.now() + path.extname(file.originalname));
+    }
+})
+
+const upload = multer({ storage });
 
 
 // type   Get
@@ -15,10 +29,10 @@ router.get('/', (req,res)=>{
     index(req, res) })
 
 
-// type   POst
+// type   Post
 // desc   Add new product
 
-router.post('/api/addproduct', (req,res)=>{
+router.post('/api/addproduct', upload.single('selectedFile'), (req,res)=>{
     addProduct(req, res)
 })
 
@@ -31,68 +45,79 @@ router.get('/api/viewproducts', (req,res)=>{
 
 
 // type   Get
-// desc   view single product
+// desc   view single product by id
 
-router.get('/api/viewproduct:id', (req,res)=>{
+router.get('/api/product/:id', (req,res)=>{
     viewSingleProduct(req, res)
 })
 
 
-// type   Get
-// desc   view all leads
+// type   post
+// desc   update product by id
 
-router.post('/api/addclinicrequest', (req,res)=>{
+router.post('/api/product/:id', (req,res)=>{
+    updateProduct(req, res)
+})
+
+
+//========== user routes ===========
+
+
+
+// type   Post
+// desc   Add new USER
+
+router.post('/api/adduser', (req,res)=>{
+    addUser(req, res)
+})
+
+// type   Get
+// desc   view all users
+
+router.get('/api/viewusers', (req,res)=>{
+    viewUsers(req, res)
+})
+
+// type   Get
+// desc   view single user by id
+
+router.get('/api/user/:id', (req,res)=>{
+    viewSingleUser(req, res)
+})
+
+
+// type   post
+// desc   update user by id
+
+router.post('/api/user/:id', (req,res)=>{
+    updateUser(req, res)
+})
+
+
+//====== lead routes =====
+
+// type   Post
+// desc   Add new lead
+
+router.post('/api/addlead', (req,res)=>{
+    addLead(req, res)
+})
+
+
+// type   Get
+// desc   view all Leads
+
+router.get('/api/viewleads', (req,res)=>{
     viewLeads(req, res)
 })
 
+// type   Get
+// desc   view single user by id
 
-// type   POST
-// desc   employee add new clinic request
-
-router.post('/api/addclinicrequest', (req,res)=>{
-    addClinicRequest(req, res)
-
+router.get('/api/lead/:id', (req,res)=>{
+    viewSingleLead(req, res)
 })
 
-
-// type   GET 
-// desc   employee check the state of clinic request
-
-router.get('/api/emp/requeststate', (req,res)=>{
-    checkRequestState(req, res)
-})
-
-
-
-// type   GET 
-// desc   manager view the state of clinic request
-
-router.get('/api/manager/viewRequests', (req,res)=>{
-    viewClinicRequests(req, res)
-})
-
-
-// type   POST 
-// desc   manager update the state of clinic request
-
-router.post('/api/manager/updaterequeststate', (req,res)=>{
-    updateClinicRequest(req, res)
-})
-
-
-// type   GET 
-// desc   clinic view the clinic request
-
-router.get('/api/clinic/viewRequests', (req,res)=>{
-    viewRequests(req, res)
-})
-
-// type   POST 
-// desc   clinic update the state of clinic request
-
-router.post('/api/clinic/updaterequeststate', (req,res)=>{
-    updateRequestState(req, res)
-})
 
 module.exports = router
 

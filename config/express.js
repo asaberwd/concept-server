@@ -20,6 +20,8 @@ const pkg = require('../package.json');
 
 const env = process.env.NODE_ENV || 'development';
 
+const cors = require('cors')
+
 /**
  * Expose
  */
@@ -97,6 +99,10 @@ module.exports = function(app, passport) {
     })
   );
 
+  // allow cors
+  app.use(cors({  credentials: true, origin : ['http://localhost:3000', 'http://localhost:5000'] }))
+
+
   // use passport session
   app.use(passport.initialize());
   app.use(passport.session());
@@ -107,5 +113,25 @@ module.exports = function(app, passport) {
   // should be declared after session and flash
   app.use(helpers(pkg.name));
 
-  
+  // declare sales queue globally
+  /*
+  const User = require('./../app/models/user')
+  User.find({ role : 'sales'})
+  .then(emp =>{
+    if(emp.length < 1) global.salesQueue = []
+    else{
+      let arr = []
+      for(let i = 0; i < emp.length; i++){
+        arr.push = emp[i]._id
+      }
+      global.salesQueue = arr
+    }
+
+  })
+  .catch(err =>{
+    throw new Error('faild to get sales rep error is: ', err)
+  })
+  */
+
+
 };

@@ -114,13 +114,6 @@ UserSchema.method({
 
     return token
   },
-  toJSON : async function () {
-    const user = this
-    let userObj = user.toObject()
-
-    delete userObj.password
-    delete userObj.tokens
-  }
 });
 
 /**
@@ -150,4 +143,5 @@ UserSchema.static({
  * Register
  */
 
-mongoose.model('User', UserSchema);
+let User = mongoose.model('User', UserSchema);
+module.exports = User

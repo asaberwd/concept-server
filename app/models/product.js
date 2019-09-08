@@ -9,6 +9,9 @@ const jwt = require('jsonwebtoken')
 const validator = require('validator')
 
 
+const momentTz = require('moment-timezone')
+
+
 /**
  * order schema
  */
@@ -17,6 +20,11 @@ const ProductSchema = new Schema({
     name:{ 
         type: String, 
         required: true},
+    describtion :{
+        type: String,
+        trim: true,
+        required : true,
+    },
     category:{ 
         type: String, 
         enum:['green coffe', 'perfume', 'hair oils' ]},
@@ -25,7 +33,13 @@ const ProductSchema = new Schema({
         default: 0},
     updatedBy:[{ 
         updatedBy : { type :Schema.Types.ObjectId, ref : 'User' },
-        updatedAt: {type: Date, default: Date.now() } }]
+        updatedAt: {type: Date, default: momentTz().tz('Egypt/Cairo').format() } }],
+    images:{ type:String },
+    createdAt : { 
+        type:Date,
+        default: momentTz().tz('Egypt/Cairo').format()
+    }
+
 });
 
 /**

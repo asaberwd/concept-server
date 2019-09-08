@@ -35,22 +35,27 @@ const LeadSchema = new Schema({
     type:Date,
     default: Date.now(),
   },
-  email: { type: String, default: '' },
-  phone: { type: String, required: true },
-  sales : { type :Schema.Types.ObjectId, ref : 'User', },
-  status:{ type: String, enum:['new', 'accepted', 'follow up', 'no answer', 'wrong number', 'closed', 'not intersted'], default:'new'},
-  historyState:[{ state: { type: String, enum:['intersted', 'active', 'not intersted']},
-                  sales: { type :Schema.Types.ObjectId, ref : 'User', },
-                  date: { type : Date, default: Date.now()} }],
-  calls:[{ date:{ type: Date, },
-           note:{ type:String },
-           sales :{type :Schema.Types.ObjectId, ref : 'User'}  }],
-  historySales : [{ sales :{type :Schema.Types.ObjectId, ref : 'User'},
-                    date:{ type : Date, default: Date.now()} }],
+  email: { 
+    type: String, default: '' },
+  sales : { 
+    type :Schema.Types.ObjectId, ref : 'User', },
+  status:{ 
+    type: String, enum:['new', 'accepted', 'follow up', 'no answer', 'wrong number', 'closed', 'not intersted'], default:'new'},
+  historyState:[{ 
+    state: { type: String, enum:['intersted', 'active', 'not intersted']},
+    sales: { type :Schema.Types.ObjectId, ref : 'User', },
+    date: { type : Date, default: Date.now()} }],
+  calls:[{ 
+    date:{ type: Date, },
+    note:{ type:String },
+    sales :{type :Schema.Types.ObjectId, ref : 'User'}  }],
+  historySales : [{
+    sales :{type :Schema.Types.ObjectId, ref : 'User'},
+    date:{ type : Date, default: Date.now()} }],
   comments:[{
-      comment:{type: String,},
-      date:{ type: Date, },
-      sales :{type :Schema.Types.ObjectId, ref : 'User'}
+    comment:{type: String,},
+    date:{ type: Date, },
+    sales :{type :Schema.Types.ObjectId, ref : 'User'}
   }]
 });
 
@@ -77,4 +82,5 @@ LeadSchema.static({});
  * Register
  */
 
-mongoose.model('Lead', LeadSchema);
+let Lead = mongoose.model('Lead', LeadSchema);
+module.exports = Lead

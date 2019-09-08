@@ -29,18 +29,19 @@ const OrderSchema = new Schema({
     type: Date, 
     default: Date.now() },
   calls:[{ 
-    date:{ type: Date, },
+    date:{ type: Date, default: Date.now() },
     note:{ type:String },
     user :{type :Schema.Types.ObjectId, ref : 'User'}  }],
   sn:{},//will be generated for shipping co
-  shippingCost:{ type: Number, required:true},
+  shippingCost:{ 
+    type: Number, required:true},
   cost:{ 
     type: Number,
     required: true},
   comments:[{
-    comment:{type: String,},
+    comment:{ type: String,},
     date:{ type: Date, },
-    sales :{type :Schema.Types.ObjectId, ref : 'User'}
+    sales :{ type :Schema.Types.ObjectId, ref : 'User'}
   }],
   status:{ 
     type: String, 

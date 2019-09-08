@@ -1,0 +1,84 @@
+
+const User = require('./../models/user') 
+
+const { validateUser } = require('./../../helper/validate')
+const { hashing } = require('../../helper/hashing')
+
+// add new user
+exports.addUser = function(req, res) {
+
+  let error = validateUser(req.body)
+
+  if(error){
+    // when product attr not valid send error object
+    res.status(400).json({ error })
+  }
+
+  let user = req.body
+  let password = hashing(req.body.password)
+  user.password = password
+  let newUser = new User(user)
+
+  newUser.save()
+  .then((el)=>{
+    console.log(el)
+    res.status(200).json({ data: el })
+  })
+  .catch(err =>{
+    console.log(err)
+    res.status(400).json({ error: err })
+
+  })
+
+};
+
+// view all users
+exports.viewUsers = function(req, res) {
+  User.find()
+  .then( el =>{
+    res.status(200).json({ data : el})
+  })
+  .catch(err =>{
+    console.log(err)
+    res.status(400).json({ error : err })
+  })
+}
+
+
+// view single user by id
+exports.viewSingleUser = function(req, res) {
+  let id = req.params.id
+  User.findById(id)
+  .then( el =>{
+    if(!el) return res.status(404).json({error :'user is not exist'})
+    res.status(200).json({ data : el})
+  })
+  .catch(err =>{
+    console.log(err)
+    res.status(400).json({ error : err })
+  })
+}
+
+exports.updateUser = function(req, res) {
+  let id = req.params.id
+
+  let error = validateUser(req.body)
+  if(error){
+    // when user attr not valid send error object
+    return res.status(400).json({ error })
+  }
+
+  let user = req.body
+  delete user.password
+
+  User.findOneAndUpdate( {_id : id},{ $set: user } , {new : true})
+  .then( pro =>{
+    if(!pro) return res.status(404).json({error :'product is not exist'})
+    res.status(200).json({ data : pro })
+  })
+  .catch(err =>{
+    console.log(err)
+    res.status(400).json({ error : err })
+  })
+}
+
