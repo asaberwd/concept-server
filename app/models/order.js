@@ -4,9 +4,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const validator = require('validator')
+
 
 
 /**
@@ -21,33 +19,32 @@ const OrderSchema = new Schema({
     type :Schema.Types.ObjectId, 
     ref : 'Lead'},
   products:[{  
-    product:{ type :Schema.Types.ObjectId, ref : 'Lead' },
+    product:{ type :Schema.Types.ObjectId, ref : 'Product' },
     quantity:{ type: Number, required:true },
     name:{ type: String },
               }],
   createdAt:{ 
     type: Date, 
     default: Date.now() },
-  calls:[{ 
-    date:{ type: Date, default: Date.now() },
-    note:{ type:String },
-    user :{type :Schema.Types.ObjectId, ref : 'User'}  }],
+  state:{ type: String, trim:true, required:true},
+  city : { type: String, trim:true, required:true },
+  fullAddress : { type: String, trim:true, required:true },
   sn:{},//will be generated for shipping co
   shippingCost:{ 
-    type: Number, required:true},
+    type: Number},
   cost:{ 
     type: Number,
     required: true},
   comments:[{
-    comment:{ type: String,},
-    date:{ type: Date, },
+    comment :{ type: String,},
+    date :{ type: Date, default: Date.now },
     sales :{ type :Schema.Types.ObjectId, ref : 'User'}
   }],
   status:{ 
     type: String, 
-    enum:['created', 'confirmed', 'shipped', 'delivered', 'returned', 'canceled', 'cashcollected']},
+    enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },
   historyState:[{ 
-    state: { type: String, enum:['created', 'confirmed', 'shipped', 'delivered', 'returned', 'canceled', 'cashcollected'] },
+    state: { type: String, enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },
     user: { type :Schema.Types.ObjectId, ref : 'User', },
     date: { type : Date, default: Date.now()} }],
   shippingCompany:{ 

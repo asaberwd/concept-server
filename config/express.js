@@ -92,10 +92,10 @@ module.exports = function(app, passport) {
       proxy: true,
       resave: true,
       saveUninitialized: true,
-      store: new mongoStore({
-        url: config.db,
-        collection: 'sessions'
-      })
+      //store: new mongoStore({
+      //  url: config.db,
+      //  collection: 'sessions'
+      //})
     })
   );
 

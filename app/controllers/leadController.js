@@ -49,7 +49,7 @@ exports.viewLeads = function(req, res) {
 // view single user by id
 exports.viewSingleLead = function(req, res) {
   let id = req.params.id
-  Lead.findById(id)
+  Lead.findById(id).populate('user')
   .then( el =>{
     if(!el) return res.status(404).json({error :'lead is not exist'})
     res.status(200).json({ data : el})

@@ -1,34 +1,32 @@
 
-const Product = require('./../models/product') 
+const Order = require('./../models/order') 
 const Joi = require('@hapi/joi');
 
 const { validateProduct } = require('./../../helper/validate')
 
 
-exports.addProduct = function(req, res) {
+exports.addOrder = function(req, res) {
 
-  // validate product attr
-  const schema = Joi.object().keys({
-    name: Joi.string().min(3).max(150).required(),
-    category: Joi.string().required(),
-  })
-console.log('pro : ', req.body, 'file', req.file)
-  const result = Joi.validate({ name: req.body.name, category: req.body.category }, schema);
+  // validate order attr
+  
 
   if(result.error){
     // when product attr not valid send error object
     res.status(400).json({ error: result.error })
   }
 
-  const imgurl = req.protocol + '://' + req.hostname + ':3000'+ '/uploads/' + req.file.filename
+  let order = {
+    createdBy: '',
+    lead : '',
+    products: '',
+    status: 'created',
+    cost : 0,
+    shippingCompany: '',
+    shippingCost:0,
+  }
+  req.body
 
-  let product = req.body
-  product.count = parseInt(req.body.count)
-  product.images = imgurl
-  product.price = parseInt(req.body.price)
-  let newProduct = new Product(product)
-
-  newProduct.save()
+  newOrder.save()
   .then((el)=>{
     console.log(el)
     res.status(200).json({ data: el })

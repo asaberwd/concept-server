@@ -10,12 +10,13 @@ const { index } = require('./../app/controllers/home')
 const { addProduct, viewProducts, viewSingleProduct, updateProduct } = require('./../app/controllers/productController')
 const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/controllers/userController')
 const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/controllers/leadController')
+const { addOrder } = require('./../app/controllers/orderController')
 
 
 const storage = multer.diskStorage({
     destination : './public/uploads',
     filename : (req, file, cb)=>{
-        cb(null, file.fieldname +'-' + Date.now() + path.extname(file.originalname));
+        cb(null, Date.now() + '-' + file.originalname );
     }
 })
 
@@ -116,6 +117,31 @@ router.get('/api/viewleads', (req,res)=>{
 
 router.get('/api/lead/:id', (req,res)=>{
     viewSingleLead(req, res)
+})
+
+
+//====== order routes =====
+
+// type   Post
+// desc   Add new order
+
+router.post('/api/addorder', (req,res)=>{
+    addOrder(req, res)
+})
+
+
+// type   Get
+// desc   view all orders
+
+router.get('/api/vieworders', (req,res)=>{
+    viewOrders(req, res)
+})
+
+// type   Get
+// desc   view single order by id
+
+router.get('/api/order/:id', (req,res)=>{
+    viewSingleOrder(req, res)
 })
 
 
