@@ -11,7 +11,7 @@ const { addProduct, viewProducts, viewSingleProduct, updateProduct } = require('
 const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/controllers/userController')
 const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/controllers/leadController')
 const { addOrder } = require('./../app/controllers/orderController')
-
+const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
 
 const storage = multer.diskStorage({
     destination : './public/uploads',
@@ -142,6 +142,37 @@ router.get('/api/vieworders', (req,res)=>{
 
 router.get('/api/order/:id', (req,res)=>{
     viewSingleOrder(req, res)
+})
+
+//====== shipping company routes =====
+
+// type   Post
+// desc   Add new company
+
+router.post('/api/addcompany', (req,res)=>{
+    addCompany(req, res)
+})
+
+
+// type   Get
+// desc   view all companies
+
+router.get('/api/viewcompanies', (req,res)=>{
+    viewcompanies(req, res)
+})
+
+// type   Get
+// desc   view single company by id
+
+router.get('/api/company/:id', (req,res)=>{
+    viewSingleCompany(req, res)
+})
+
+// type   put
+// desc   update company by id
+
+router.put('/api/company/:id', (req,res)=>{
+    updateCompany(req, res)
 })
 
 

@@ -12,7 +12,7 @@ const Schema = mongoose.Schema;
  */
 
 const OrderSchema = new Schema({
-  createdBy:{ 
+  user:{ 
     type :Schema.Types.ObjectId, 
     ref : 'User'},
   lead:{ 
@@ -22,6 +22,7 @@ const OrderSchema = new Schema({
     product:{ type :Schema.Types.ObjectId, ref : 'Product' },
     quantity:{ type: Number, required:true },
     name:{ type: String },
+    price : {type: Number}
               }],
   createdAt:{ 
     type: Date, 
@@ -38,17 +39,17 @@ const OrderSchema = new Schema({
   comments:[{
     comment :{ type: String,},
     date :{ type: Date, default: Date.now },
-    sales :{ type :Schema.Types.ObjectId, ref : 'User'}
+    user :{ type :Schema.Types.ObjectId, ref : 'User'}
   }],
   status:{ 
-    type: String, 
+    type: String,
+    default : 'created',
     enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },
   historyState:[{ 
     state: { type: String, enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },
     user: { type :Schema.Types.ObjectId, ref : 'User', },
     date: { type : Date, default: Date.now()} }],
-  shippingCompany:{ 
-    type:String },
+  shippingCompany:{ type: Schema.Types.ObjectId, ref: 'ShippingCompany' },
 
 });
 
@@ -79,4 +80,5 @@ OrderSchema.static({
  * Register
  */
 
-mongoose.model('Order', OrderSchema);
+let Order = mongoose.model('Order', OrderSchema);
+module.exports = Order

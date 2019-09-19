@@ -10,21 +10,53 @@ exports.addOrder = function(req, res) {
   // validate order attr
   
 
-  if(result.error){
-    // when product attr not valid send error object
-    res.status(400).json({ error: result.error })
-  }
+  const { orderProducts, company, shipping, area, gov  } = req.body
 
   let order = {
-    createdBy: '',
-    lead : '',
-    products: '',
-    status: 'created',
+    user : "5d80decb8aadc50049f28edc",
+    lead : "5d7df9c3751b170036ef06f4",
+    products: [],
     cost : 0,
-    shippingCompany: '',
-    shippingCost:0,
+    shippingCompany: company,
+    fullAddress: req.body.fulladdress,
+    shippingCompany: req.body.company,
   }
-  req.body
+
+  let allIds = []
+  let total = 0
+
+  for(let i = 0; i< orderProducts.length;i++){    
+
+    allIds[i] = mongoose.Types.ObjectId(orderProducts[i].productId)
+    order.products[i] = {
+      product : orderProducts[i].productId,
+      name : orderProducts[i].name,
+      quantity : orderProducts[i].quantity,
+      price : orderProducts[i].price
+    }
+    total += orderProducts[i].total
+  }
+
+
+  // get all products in order from db
+  Order.find({
+    '_id': { $in: allIds}
+  })
+  .then( ()=>{
+
+  })
+  .catch(err =>{
+    console.log('err')
+  })
+
+  order.state = gov
+  order.city = area
+  order.shippingCost = shipping
+  order.cost = total + shipping
+  order.comments = [ { comment: req.body.comment, user: '5d80decb8aadc50049f28edc'} ]
+
+
+  let newOrder = new Order(order)
 
   newOrder.save()
   .then((el)=>{
