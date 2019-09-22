@@ -44,6 +44,7 @@ const OrderSchema = new Schema({
   status:{ 
     type: String,
     default : 'created',
+    index : true,
     enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },
   historyState:[{ 
     state: { type: String, enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },

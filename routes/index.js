@@ -10,7 +10,7 @@ const { index } = require('./../app/controllers/home')
 const { addProduct, viewProducts, viewSingleProduct, updateProduct } = require('./../app/controllers/productController')
 const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/controllers/userController')
 const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/controllers/leadController')
-const { addOrder } = require('./../app/controllers/orderController')
+const { addOrder, viewOrders, viewSingleOrder, getStatistics } = require('./../app/controllers/orderController')
 const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
 
 const storage = multer.diskStorage({
@@ -137,12 +137,18 @@ router.get('/api/vieworders', (req,res)=>{
     viewOrders(req, res)
 })
 
+router.get('/api/order/statics', (req, res)=>{
+    getStatistics(req, res)
+})
+
 // type   Get
 // desc   view single order by id
 
 router.get('/api/order/:id', (req,res)=>{
     viewSingleOrder(req, res)
 })
+
+
 
 //====== shipping company routes =====
 

@@ -65,7 +65,7 @@ const UserSchema = new Schema({
   },
   workType:{
     type:String,
-    enum:['from home', 'part time', 'full time']
+    enum:['from-home', 'part-time', 'full-time']
   },
   status:{
     type:String,
@@ -94,6 +94,21 @@ const UserSchema = new Schema({
   project:{
     type: String
   },
+  credit:{
+    type:Number
+  },
+  spent:{
+    type:Number
+  },
+  bouns:{
+    type: Number
+  },
+  isfree :{
+    type:Boolean
+  },
+  dailyLead:{
+    type:Number
+  }
 });
 
 /**

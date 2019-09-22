@@ -5,18 +5,21 @@ const { validateUser } = require('./../../helper/validate')
 const { hashing } = require('../../helper/hashing')
 
 // add new user
-exports.addUser = function(req, res) {
+exports.addUser = async function(req, res) {
 
-  let error = validateUser(req.body)
+  let error = await validateUser(req.body)
 
   if(error){
     // when product attr not valid send error object
-    res.status(400).json({ error })
+    console.log(error)
+    return res.status(400).json({ error })
   }
 
   let user = req.body
-  let password = hashing(req.body.password)
+  let password = hashing(req.body.phone)
   user.password = password
+  user.email = [req.body.email]
+  user.phone = [req.body.phone]
   let newUser = new User(user)
 
   newUser.save()
