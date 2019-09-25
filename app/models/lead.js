@@ -18,6 +18,7 @@ const LeadSchema = new Schema({
     type: String,trim:true, required:true, default:'EG'},
   telephone:{ 
     type: String, trim:true, required:true},
+  user : { type :Schema.Types.ObjectId, ref : 'User', },
   gender:{ 
     type:String },
   zoneid:{ 
@@ -63,6 +64,8 @@ const LeadSchema = new Schema({
     user :{ type :Schema.Types.ObjectId, ref : 'User'}
   }],
   lead: { type :Schema.Types.ObjectId, ref : 'Lead', },
+  productName: { type :String },
+
 
 });
 

@@ -15,15 +15,15 @@ const momentTz = require('moment-timezone')
 
 const CallSchema = new Schema({
     date:{ 
-        type: Date, },
+        type: Date, default: Date.now },
     note:{ 
         type:String },
-    sales:{ 
-        type :Schema.Types.ObjectId, ref : 'User'},
+    user:{ 
+        type :Schema.Types.ObjectId, ref : 'User' },
     lead:{ 
-        type :Schema.Types.ObjectId, ref : 'Lead'},
+        type :Schema.Types.ObjectId, ref : 'Lead' },
     order:{ 
-        type :Schema.Types.ObjectId, ref : 'Order'},
+        type :Schema.Types.ObjectId, ref : 'Order' },
     oldState: { 
         type: String, enum:[ 'new','closed', 'not intersted','no answer', 'wrong number', 'accepted', 'follow up', 'hot']},
     newState: { 

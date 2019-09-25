@@ -125,5 +125,9 @@ exports.getStatistics = function(req, res){
     res.status(400).json({ error : err })
   })
 
+  //db.contest.aggregate([
+  //  {"$group" : {_id:"$province", count:{$sum:1}}}
+  //])
+
 }
 

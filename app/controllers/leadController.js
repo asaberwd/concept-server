@@ -1,5 +1,7 @@
 
-const Lead = require('./../models/lead') 
+const Lead = require('./../models/lead')
+const Call = require('./../models/call') 
+
 
 const { validateLead } = require('./../../helper/validate')
 const fs = require('fs')
@@ -52,7 +54,11 @@ exports.viewSingleLead = function(req, res) {
   Lead.findById(id).populate('user')
   .then( el =>{
     if(!el) return res.status(404).json({error :'lead is not exist'})
-    res.status(200).json({ data : el})
+    // get calls associated with lead
+    Call.find({lead: id}).populate('user')
+    .then((ca)=>{
+      res.status(200).json({ data : el, calls: ca })
+    })
   })
   .catch(err =>{
     console.log(err)

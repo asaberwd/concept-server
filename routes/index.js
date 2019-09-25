@@ -12,6 +12,7 @@ const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/con
 const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/controllers/leadController')
 const { addOrder, viewOrders, viewSingleOrder, getStatistics } = require('./../app/controllers/orderController')
 const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
+const { addCall, viewAllCalls, viewCallsByUser, viewCallsByLead, viewSingleCall } = require('./../app/controllers/callController')
 
 const storage = multer.diskStorage({
     destination : './public/uploads',
@@ -180,6 +181,46 @@ router.get('/api/company/:id', (req,res)=>{
 router.put('/api/company/:id', (req,res)=>{
     updateCompany(req, res)
 })
+
+//====== calls routes =====
+
+// type   Post
+// desc   Add new call
+
+router.post('/api/call', (req,res)=>{
+    addCall(req, res)
+})
+
+
+// type   Get
+// desc   view all calls
+
+router.get('/api/call', (req,res)=>{
+    viewAllCalls(req, res)
+})
+
+// type   get
+// desc   update company by id
+
+router.get('/api/call/user/:id', (req,res)=>{
+    viewCallsByUser(req, res)
+})
+
+// type   get
+// desc   update company by id
+
+router.get('/api/call/lead/:id', (req,res)=>{
+    viewCallsByLead(req, res)
+})
+
+// type   Get
+// desc   view single call by id
+
+router.get('/api/call/:id', (req,res)=>{
+    viewSingleCall(req, res)
+})
+
+
 
 
 module.exports = router
