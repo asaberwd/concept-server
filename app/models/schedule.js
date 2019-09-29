@@ -5,7 +5,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
 const momentTz = require('moment-timezone')
 
 
@@ -13,22 +12,27 @@ const momentTz = require('moment-timezone')
  * order schema
  */
 
-const CallSchema = new Schema({
+const ScheduleSchema = new Schema({
     date:{ 
         type: Date,
-        default: momentTz().tz('Egypt/Cairo').format() },
+        required : true },
     note:{ 
         type:String },
+    status:{
+        type: String,
+        enum : [ 'active', 'archived' ],
+        default: 'active'
+        },
+    createdAt:{
+        type: String,
+        default: momentTz().tz('Egypt/Cairo').format()
+    },
     user:{ 
         type :Schema.Types.ObjectId, ref : 'User' },
     lead:{ 
         type :Schema.Types.ObjectId, ref : 'Lead' },
     order:{ 
-        type :Schema.Types.ObjectId, ref : 'Order' },
-    oldState: { 
-        type: String, enum:[ 'new','closed', 'not intersted','no answer', 'wrong number', 'accepted', 'follow up', 'hot']},
-    newState: { 
-        type: String, enum:[ 'closed', 'not intersted','no answer', 'wrong number', 'accepted', 'follow up', 'hot']}
+        type :Schema.Types.ObjectId, ref : 'Order' }
 });
 
 /**
@@ -42,7 +46,7 @@ const CallSchema = new Schema({
  * Methods
  */
 
-CallSchema.method({
+ScheduleSchema.method({
   
 });
 
@@ -50,7 +54,7 @@ CallSchema.method({
  * Statics
  */
 
-CallSchema.static({
+ScheduleSchema.static({
   
 });
 
@@ -58,5 +62,5 @@ CallSchema.static({
  * Register
  */
 
-let Call = mongoose.model('Call', CallSchema);
-module.exports = Call
+let Schedule = mongoose.model('Schedule', ScheduleSchema);
+module.exports = Schedule

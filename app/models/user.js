@@ -69,7 +69,8 @@ const UserSchema = new Schema({
   },
   status:{
     type:String,
-    enum:['active', 'resigd', 'terminated']
+    enum:['active', 'resigd', 'terminated'],
+    default:'active'
   },
   docs:{
     pics4:{ type:Boolean, default:false}, pornId:{type:Boolean, default:false },
@@ -95,19 +96,23 @@ const UserSchema = new Schema({
     type: String
   },
   credit:{
-    type:Number
+    type:Number,
   },
   spent:{
-    type:Number
+    type:Number,
   },
   bouns:{
     type: Number
   },
-  isfree :{
-    type:Boolean
+  isFree :{
+    type:Boolean,
+    default:true,
+    index:true,
   },
   dailyLead:{
-    type:Number
+    type:Number,
+    index: true,
+    default:0
   }
 });
 

@@ -13,6 +13,8 @@ const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/con
 const { addOrder, viewOrders, viewSingleOrder, getStatistics } = require('./../app/controllers/orderController')
 const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
 const { addCall, viewAllCalls, viewCallsByUser, viewCallsByLead, viewSingleCall } = require('./../app/controllers/callController')
+const { addSchedule, viewActiveSchedules, viewSingleSchdule , viewActiveUserSchedules } = require('./../app/controllers/scheduleController')
+
 
 const storage = multer.diskStorage({
     destination : './public/uploads',
@@ -219,6 +221,50 @@ router.get('/api/call/lead/:id', (req,res)=>{
 router.get('/api/call/:id', (req,res)=>{
     viewSingleCall(req, res)
 })
+
+//====== schedule routes =====
+
+// type   Post
+// desc   Add new schdule
+
+router.post('/api/schedule', (req,res)=>{
+    addSchedule(req, res)
+})
+
+
+// type   Get
+// desc   view all schedules which status is active
+
+router.get('/api/schdule', (req,res)=>{
+    viewActiveSchedules(req, res)
+})
+
+// type   Get
+// desc   view single schedule by id
+
+router.get('/api/schedule/:id', (req,res)=>{
+    viewSingleSchdule(req, res)
+})
+
+
+
+// type   Get
+// desc   view all user schedules which status is active
+
+router.get('/api/schdule/user/:id', (req,res)=>{
+    viewActiveUserSchedules(req, res)
+})
+
+
+
+
+// type   put
+// desc   update schedule
+
+router.put('/api/schedule/:id', (req,res)=>{
+    updateSchedule(req, res)
+})
+
 
 
 

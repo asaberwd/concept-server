@@ -85,3 +85,14 @@ exports.updateUser = function(req, res) {
   })
 }
 
+exports.updateSalesByCron = function(){
+  User.updateMany({ role: 'sales', status:'active'}, { $set:{dailyLead: 0 }})
+  .then( res =>{
+    console.log(` number of records matches ${res.n} and modified ${res.nModified}`)
+  })
+  .catch(err =>{
+    console.log('err ===', err)
+    throw new Error('err')
+  })
+}
+

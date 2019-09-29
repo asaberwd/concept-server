@@ -5,7 +5,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
+const momentTz = require('moment-timezone')
 
 /**
  * order schema
@@ -26,7 +26,7 @@ const OrderSchema = new Schema({
               }],
   createdAt:{ 
     type: Date, 
-    default: Date.now() },
+    default: momentTz().tz('Egypt/Cairo').format() },
   state:{ type: String, trim:true, required:true},
   city : { type: String, trim:true, required:true },
   fullAddress : { type: String, trim:true, required:true },
@@ -38,7 +38,7 @@ const OrderSchema = new Schema({
     required: true},
   comments:[{
     comment :{ type: String,},
-    date :{ type: Date, default: Date.now },
+    date :{ type: Date, default: momentTz().tz('Egypt/Cairo').format() },
     user :{ type :Schema.Types.ObjectId, ref : 'User'}
   }],
   status:{ 
@@ -49,7 +49,7 @@ const OrderSchema = new Schema({
   historyState:[{ 
     state: { type: String, enum:['created', 'confirmed', 'shipped', 'delivered','delivered cash collected', 'returned to stock', 'undelivered'] },
     user: { type :Schema.Types.ObjectId, ref : 'User', },
-    date: { type : Date, default: Date.now()} }],
+    date: { type : Date, default: momentTz().tz('Egypt/Cairo').format()} }],
   shippingCompany:{ type: Schema.Types.ObjectId, ref: 'ShippingCompany' },
 
 });

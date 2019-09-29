@@ -22,6 +22,8 @@ const env = process.env.NODE_ENV || 'development';
 
 const cors = require('cors')
 
+// call cron jobs
+const crons = require('./../crons/salesResetLeadCounter')
 /**
  * Expose
  */

@@ -1,6 +1,7 @@
 
 const Lead = require('./../models/lead')
-const Call = require('./../models/call') 
+const Call = require('./../models/call')
+const User = require('./../models/user') 
 
 
 const { validateLead } = require('./../../helper/validate')
@@ -22,8 +23,20 @@ exports.addLead = function(req, res) {
     res.status(400).json({ error })
   }
 
-  let newLead = new Lead(req.body)
-  newLead.save()
+  let newLead
+
+  User.find({role: 'sales'}).sort({dailyLead:1}).limit(1)
+  .then((user)=>{
+
+    return User.find({role: 'sales'}).sort({dailyLead:1}).limit(1)
+
+  }).then((u)=>{
+    console.log('u ===', u)
+    newLead = new Lead(req.body)
+    newLead.user = u[0]._id
+    userId = u[0]._id 
+    return newLead.save()
+  })
   .then((el)=>{
     console.log(el)
     res.status(200).json({ data: el })
@@ -33,6 +46,13 @@ exports.addLead = function(req, res) {
     res.status(400).json({ error: err })
 
   })
+
+  /*User.findOneAndUpdate({_id:userId}, { $inc:{dailyLead: 1 }}, {new:true})
+  .then((us)=>{
+    console.log('user after', us)
+  }).catch(err =>{
+    console.log('err is :', err)
+  })*/
   };
 
 

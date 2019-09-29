@@ -20,7 +20,7 @@ const ShippingCompanySchema = new Schema({
         required : true,
     },
     isActive:{ type: Boolean,required: true, default:true },
-    lastUpdated:{ type: Date, default: Date.now },
+    lastUpdated:{ type: Date, default: momentTz().tz('Egypt/Cairo').format() },
     phone:{ type: String,required: true , trim: true, unique: true },
     Cairo:{ type: Number, min: 0 },
     Alexandria:{ type: Number, min: 0 },

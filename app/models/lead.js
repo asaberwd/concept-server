@@ -4,6 +4,9 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const User = require('./user')
+
+const momentTz = require('moment-timezone')
 
 /**
  * Lead schema
@@ -15,7 +18,7 @@ const LeadSchema = new Schema({
   address:{ 
     type:String},
   country:{ 
-    type: String,trim:true, required:true, default:'EG'},
+    type: String,trim:true, default:'EG'},
   telephone:{ 
     type: String, trim:true, required:true},
   user : { type :Schema.Types.ObjectId, ref : 'User', },
@@ -44,7 +47,7 @@ const LeadSchema = new Schema({
     type:Boolean},
   registerDate:{
     type:Date,
-    default: Date.now(),
+    default: momentTz().tz('Egypt/Cairo').format(),
   },
   email: { 
     type: String, default: '' },
@@ -54,10 +57,10 @@ const LeadSchema = new Schema({
   historyState:[{ 
     state: { type: String, enum:['intersted', 'active', 'not intersted']},
     user: { type :Schema.Types.ObjectId, ref : 'User', },
-    date: { type : Date, default: Date.now()} }],
+    date: { type : Date, default: momentTz().tz('Egypt/Cairo').format()} }],
   historySales : [{
     user :{type :Schema.Types.ObjectId, ref : 'User'},
-    date:{ type : Date, default: Date.now()} }],
+    date:{ type : Date, default: momentTz().tz('Egypt/Cairo').format()} }],
   comments:[{
     comment:{ type: String,},
     date:{ type: Date, },
@@ -75,6 +78,21 @@ const LeadSchema = new Schema({
  * - validations
  * - virtuals
  */
+
+ LeadSchema.pre('save', function(){
+  console.log('from pre hooks', typeof(this.user))
+  let id = this.user.toString() 
+  User.findOne({_id: id})
+    .then( u =>{
+      u.dailyLead = u.dailyLead?u.dailyLead+1: 1
+      u.save()
+     })
+    .catch((err)=>{
+     console.log('error is : ', err)
+     throw new Error('error in lead hooks')
+    })
+
+ })
 
 /**
  * Methods
