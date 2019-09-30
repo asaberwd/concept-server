@@ -251,7 +251,7 @@ router.get('/api/schedule/:id', (req,res)=>{
 // type   Get
 // desc   view all user schedules which status is active
 
-router.get('/api/schdule/user/:id', (req,res)=>{
+router.get('/api/schdule/user/:user', (req,res)=>{
     viewActiveUserSchedules(req, res)
 })
 
