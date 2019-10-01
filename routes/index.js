@@ -151,6 +151,10 @@ router.get('/api/order/:id', (req,res)=>{
     viewSingleOrder(req, res)
 })
 
+router.put('/api/updateorderstatus/:id',(req,res)=>{
+    updateOrderStatus(req,res)
+})
+
 
 
 //====== shipping company routes =====

@@ -125,6 +125,23 @@ exports.getStatistics = function(req, res){
     res.status(400).json({ error : err })
   })
 
+
+  
+exports.updateOrderStatus = function(req,res){
+  let id = req.params.id
+
+  Order.findOneAndUpdate({_id:id},{$set:req.body},{new:true})
+  .then(ord=>{
+    if(!ord) return res.status(404).json({error:'Order is not exist'})
+    res.status(200).json({data:ord})   
+  })
+  .catch(err=>{
+    console.log(err)
+    res.status(400).json({error:err})
+  })
+
+}
+
   //db.contest.aggregate([
   //  {"$group" : {_id:"$province", count:{$sum:1}}}
   //])
