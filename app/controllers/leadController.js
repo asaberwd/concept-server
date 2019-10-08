@@ -6,7 +6,7 @@ const User = require('./../models/user')
 
 const { validateLead } = require('./../../helper/validate')
 const fs = require('fs')
-
+const xlsx = require("xlsx")
 
 // add new lead
 exports.addLead = function(req, res) {
@@ -85,3 +85,18 @@ exports.viewSingleLead = function(req, res) {
     res.status(400).json({ error : err })
   })
 }
+
+exports.uploadExelLeads = function(req,res){
+  let leadsfile = xlsx.readFile(req.file.path)
+  let sheet_list = leadsfile.SheetNames
+  let leads = xlsx.utils.sheet_to_json(leadsfile.Sheets[sheet_list[0]])
+  for(let k =0 ; k < leads.length ; k++){
+    newLead = new Lead(leads[k])
+    newLead.save().then( el =>{
+      res.status(200).json({ data : el})
+    })
+  }
+
+  //console.log(req)
+}
+

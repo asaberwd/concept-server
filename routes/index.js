@@ -9,7 +9,7 @@ const path = require('path');
 const { index } = require('./../app/controllers/home')
 const { addProduct, viewProducts, viewSingleProduct, updateProduct } = require('./../app/controllers/productController')
 const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/controllers/userController')
-const { addLead, viewLeads, viewSingleLead, updateLead } = require('./../app/controllers/leadController')
+const { addLead, viewLeads, viewSingleLead, updateLead ,uploadExelLeads } = require('./../app/controllers/leadController')
 const { addOrder, viewOrders, viewSingleOrder, getStatistics } = require('./../app/controllers/orderController')
 const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
 const { addCall, viewAllCalls, viewCallsByUser, viewCallsByLead, viewSingleCall } = require('./../app/controllers/callController')
@@ -120,6 +120,14 @@ router.get('/api/viewleads', (req,res)=>{
 
 router.get('/api/lead/:id', (req,res)=>{
     viewSingleLead(req, res)
+})
+router.post('/api/')
+
+
+
+
+router.post('/api/uploadleads', upload.single('exelFile'), (req,res)=>{
+    uploadExelLeads(req, res)
 })
 
 
