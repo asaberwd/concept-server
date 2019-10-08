@@ -9,7 +9,7 @@ const path = require('path');
 const { index } = require('./../app/controllers/home')
 const { addProduct, viewProducts, viewSingleProduct, updateProduct } = require('./../app/controllers/productController')
 const { addUser, viewUsers, viewSingleUser, updateUser } = require('./../app/controllers/userController')
-const { addLead, viewLeads, viewSingleLead, updateLead ,uploadExelLeads ,assignLeadtoUser } = require('./../app/controllers/leadController')
+const { addLead, viewLeads, viewSingleLead, updateLead ,uploadExelLeads ,assignLeadtoUser ,assignMultiLeadstoUser } = require('./../app/controllers/leadController')
 const { addOrder, viewOrders, viewSingleOrder, getStatistics } = require('./../app/controllers/orderController')
 const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
 const { addCall, viewAllCalls, viewCallsByUser, viewCallsByLead, viewSingleCall } = require('./../app/controllers/callController')
@@ -134,6 +134,9 @@ router.put("/api/assignleaduser" , (req,res)=>{
     assignLeadtoUser(req,res)
 })
 
+router.put("/api/assignmultileadstouser",(req,res)=>{
+    assignMultiLeadstoUser(req,res)
+})
 
 //====== order routes =====
 

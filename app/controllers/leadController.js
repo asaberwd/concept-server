@@ -114,4 +114,21 @@ Lead.findOneAndUpdate({_id:id},{user:req.body.user},{new:true})
 })
 }
 
+exports.assignMultiLeadstoUser = function(req ,res){
+  let leads = req.body.leadsid 
+  let id
+  for(let k =0 ;  k < leads.length ; k++){
+    id = leads[k] 
+    Lead.findOneAndUpdate({_id:id},{user:req.body.user},{new:true})
+  .then(led=>{
+    if(!led) return res.status(404).json({error:'Lead is not exist'})
+    res.status(200).json({data:led})   
+  })
+  .catch(err=>{
+    console.log(err)
+    res.status(400).json({error:err})
+  })
+  }  
+  }
+  
 
