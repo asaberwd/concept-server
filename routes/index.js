@@ -127,6 +127,14 @@ router.post('/api/')
 
 
 router.post('/api/uploadleads', upload.single('exelFile'), (req,res)=>{
+    let file_path = req.file.path
+    console.log(req.file)
+  let ext = path.extname(file_path)
+
+  if(ext!='.xlsx')
+  {
+    res.status(400).json({error : 'error with File extention'})
+  }
     uploadExelLeads(req, res)
 })
 

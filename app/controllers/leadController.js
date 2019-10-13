@@ -7,6 +7,7 @@ const User = require('./../models/user')
 const { validateLead } = require('./../../helper/validate')
 const fs = require('fs')
 const xlsx = require("xlsx")
+const path = require('path');
 
 // add new lead
 exports.addLead = function(req, res) {
@@ -87,23 +88,71 @@ exports.viewSingleLead = function(req, res) {
 }
 
 exports.uploadExelLeads = function(req,res){
-  let leadsfile = xlsx.readFile(req.file.path)
-  let sheet_list = leadsfile.SheetNames
-  let leads = xlsx.utils.sheet_to_json(leadsfile.Sheets[sheet_list[0]])
-  for(let k =0 ; k < leads.length ; k++){
-    newLead = new Lead(leads[k])
-    newLead.save().then( el =>{
-      res.status(200).json({ data : el})
-    })
+  let file_path = req.file.path
+  
+  let ext = path.extname(file_path)
+
+  if(ext!='.xlsx')
+  {
+    res.status(400).json({error : 'error with File extention'})
   }
+
+  //console.log(ext)
+  //console.log(req.file)
+  
+  let leadsfile = xlsx.readFile(file_path)
+  let sheet_list = leadsfile.SheetNames
+  if (!sheet_list || !sheet_list.length) {
+    res.status(400).json({error : 'cant accept empty excel'})
+ 
+  }
+  
+
+  let leads = xlsx.utils.sheet_to_json(leadsfile.Sheets[sheet_list[0]])
+
+  if(!leads){
+    res.status(400).json({error : 'cant accept empty excel columns'})
+    
+  }
+  let inserted_leads = 0
+  for(let k =0 ; k < leads.length ; k++){
+
+    if('telephone' in leads[k]){
+      leads[k]['telephone'] = ''+leads[k]['telephone']
+
+    }
+    let error = validateLead(leads[k])
+    if(error)
+    {
+      fs.appendFile('logs/unvaliedexcelleads.log', `${JSON.stringify(leads[k])}
+      error is : ${error} \n\n `,
+     (err) => {if (err) throw err;})
+    }
+    else{
+      newLead = new Lead(leads[k])
+      newLead.save()
+      inserted_leads+=1
+    }
+    
+  }
+  res.status(200).json({'leads' : inserted_leads})
 
   //console.log(req)
 }
 
 exports.assignLeadtoUser = function(req ,res){
-let id = req.body.leadid
 
-Lead.findOneAndUpdate({_id:id},{user:req.body.user},{new:true})
+let id = req.body.leadid
+let req_user = req.body.user
+
+if(!id){
+  res.status(400).json({error:'lead is not exist'})
+
+}
+if(!req_user){
+  res.status(400).json({error:'User is not exist'})
+}
+Lead.findOneAndUpdate({_id:id},{user:req_user},{new:true})
 .then(led=>{
   if(!led) return res.status(404).json({error:'Lead is not exist'})
   res.status(200).json({data:led})   
@@ -116,19 +165,29 @@ Lead.findOneAndUpdate({_id:id},{user:req.body.user},{new:true})
 
 exports.assignMultiLeadstoUser = function(req ,res){
   let leads = req.body.leadsid 
+ 
+  let req_user = req.body.user
+
+if(!leads){
+  res.status(400).json({error:'lead is not exist'})
+
+}
+if(!req_user){
+  res.status(400).json({error:'User is not exist'})
+}
   let id
+  let success_leads = new Array();
   for(let k =0 ;  k < leads.length ; k++){
     id = leads[k] 
-    Lead.findOneAndUpdate({_id:id},{user:req.body.user},{new:true})
+    Lead.findOneAndUpdate({_id:id},{user:req_user},{new:true})
   .then(led=>{
-    if(!led) return res.status(404).json({error:'Lead is not exist'})
-    res.status(200).json({data:led})   
+   // console.log(led)
+    success_leads.push(led)
   })
-  .catch(err=>{
-    console.log(err)
-    res.status(400).json({error:err})
-  })
-  }  
+  
+  }
+  console.log(success_leads)
+  res.status(200).json({data:success_leads})     
   }
   
 
