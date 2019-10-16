@@ -85,8 +85,12 @@ const LeadSchema = new Schema({
   User.findOne({_id: id})
     .then( u =>{
       u.dailyLead = u.dailyLead?u.dailyLead+1: 1
-      u.save()
+      return u.save()
      })
+     .then((user)=>{
+       console.log(`sales:${user._id} has : ${user.dailyLead}`)
+     }
+     )
     .catch((err)=>{
      console.log('error is : ', err)
      throw new Error('error in lead hooks')

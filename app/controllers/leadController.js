@@ -57,9 +57,11 @@ exports.addLead = function(req, res) {
   };
 
 
-// view all users
+// view all leads
 exports.viewLeads = function(req, res) {
+  const {limit = 10, page = 0} = req.query;
   Lead.find()
+  .limit(limit).skip(skip)
   .then( el =>{
     res.status(200).json({ data : el})
   })
@@ -87,7 +89,10 @@ exports.viewSingleLead = function(req, res) {
   })
 }
 
-exports.uploadExelLeads = function(req,res){
+
+exports.uploadExelLeads = async function(req,res){
+
+
   let file_path = req.file.path
   
   let ext = path.extname(file_path)
@@ -97,8 +102,6 @@ exports.uploadExelLeads = function(req,res){
     res.status(400).json({error : 'error with File extention'})
   }
 
-  //console.log(ext)
-  //console.log(req.file)
   
   let leadsfile = xlsx.readFile(file_path)
   let sheet_list = leadsfile.SheetNames
@@ -114,7 +117,7 @@ exports.uploadExelLeads = function(req,res){
     res.status(400).json({error : 'cant accept empty excel columns'})
     
   }
-  let inserted_leads = 0
+  var insertedLeads = 0
   for(let k =0 ; k < leads.length ; k++){
 
     if('telephone' in leads[k]){
@@ -122,20 +125,41 @@ exports.uploadExelLeads = function(req,res){
 
     }
     let error = validateLead(leads[k])
-    if(error)
-    {
+    if(error){
+      console.log('validation error')
       fs.appendFile('logs/unvaliedexcelleads.log', `${JSON.stringify(leads[k])}
       error is : ${error} \n\n `,
-     (err) => {if (err) throw err;})
+      (err) => {if (err) throw err;})
+
+      return res.status(400).json({error : 'validation error , check fields names and values'})
     }
     else{
-      newLead = new Lead(leads[k])
-      newLead.save()
-      inserted_leads+=1
+      console.log('start adding lead')
+      // assign lead to user
+
+      await User.find({role: 'sales'}).sort({dailyLead:1}).limit(1)
+      .then((user)=>{
+        return User.find({role: 'sales'}).sort({dailyLead:1}).limit(1)
+      })
+      .then((u)=>{
+        newLead = new Lead(leads[k])
+        newLead.user = u[0]._id
+        insertedLeads++
+        return newLead.save()
+      })
+      .then((le)=>{
+        console.log(`lead: ${le.fullName} with user: ${le.user} added succesfully`)
+      })
+      .catch((error)=>{
+        fs.appendFile('logs/unvaliedexcelleads.log', `${JSON.stringify(leads[k])}
+        error is : ${error} \n\n `,
+        (err) => {if (err) throw err;})
+      })
+      
     }
     
   }
-  res.status(200).json({'leads' : inserted_leads})
+  res.status(200).json({'leads' : insertedLeads})
 
   //console.log(req)
 }
