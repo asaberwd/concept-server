@@ -8,6 +8,8 @@ const { validateLead } = require('./../../helper/validate')
 const fs = require('fs')
 const xlsx = require("xlsx")
 const path = require('path');
+const momentTz = require('moment-timezone')
+
 
 // add new lead
 exports.addLead = function(req, res) {
@@ -164,54 +166,72 @@ exports.uploadExelLeads = async function(req,res){
   //console.log(req)
 }
 
+
 exports.assignLeadtoUser = function(req ,res){
 
-let id = req.body.leadid
-let req_user = req.body.user
-
-if(!id){
-  res.status(400).json({error:'lead is not exist'})
-
-}
-if(!req_user){
-  res.status(400).json({error:'User is not exist'})
-}
-Lead.findOneAndUpdate({_id:id},{user:req_user},{new:true})
-.then(led=>{
-  if(!led) return res.status(404).json({error:'Lead is not exist'})
-  res.status(200).json({data:led})   
-})
-.catch(err=>{
-  console.log(err)
-  res.status(400).json({error:err})
-})
-}
-
-exports.assignMultiLeadstoUser = function(req ,res){
-  let leads = req.body.leadsid 
- 
+  let id = req.body.leadid
   let req_user = req.body.user
-
-if(!leads){
-  res.status(400).json({error:'lead is not exist'})
-
-}
-if(!req_user){
-  res.status(400).json({error:'User is not exist'})
-}
-  let id
-  let success_leads = new Array();
-  for(let k =0 ;  k < leads.length ; k++){
-    id = leads[k] 
-    Lead.findOneAndUpdate({_id:id},{user:req_user},{new:true})
+  
+  if(!id){
+    res.status(400).json({error:'lead is not exist'})
+  
+  }
+  if(!req_user){
+    res.status(400).json({error:'User is not exist'})
+  }
+  Lead.findOneAndUpdate({_id:id},{ user:req_user ,
+    $push: { historySales:  {user:req_user ,date: momentTz().tz('Egypt/Cairo').format("YYYY-MM-DDTHH:mm:ss")} } },
+  {new:true})
   .then(led=>{
-   // console.log(led)
-    success_leads.push(led)
+    if(!led) return res.status(404).json({error:'Lead is not exist'})
+    res.status(200).json({data:led})   
   })
+  .catch(err=>{
+    console.log(err)
+    res.status(400).json({error:err})
+  })
+  }
+  
+  exports.assignMultiLeadstoUser = function(req ,res){
+    let leads = req.body.leadsid 
+   
+    let req_user = req.body.user
+  
+  if(!leads){
+    res.status(400).json({error:'lead is not exist'})
   
   }
-  console.log(success_leads)
-  res.status(200).json({data:success_leads})     
+  if(!req_user){
+    res.status(400).json({error:'User is not exist'})
   }
+    
+  /*  Lead.find().where('_id').in(leads).exec((err, records) => {
+  
+      
+     if(err) return res.status(400).json({erorr:err}) 
+      //res.status(200).json({data:records})
+   
+      records.forEach(record => {
+        //Lead.findOneAndUpdate({_id:record['_id']},{historySales:record['historySales'],user:req_user},{new:true})
+        Lead.findOneAndUpdate(
+          { _id: record['_id'] }, 
+          { user:req_user ,
+            $push: { historySales:  {user:req_user ,date: momentTz().tz('Egypt/Cairo').format()} } },
+        {new: true}
+      ).then(led=>{
+        console.log(led)
+      })
+  
+  
+  
+     })
+     
+    }) */
+    Lead.updateMany({_id :leads },{ user:req_user ,
+      $push: { historySales:  {user:req_user ,date: momentTz().tz('Egypt/Cairo').format()} } },{new:true}).exec((err, records) => {
+        console.log(records)
+        console.log(err)
+      })
   
 
+    }

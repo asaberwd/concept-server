@@ -47,3 +47,17 @@ exports.validateLead= (body)=>{
 
   return result.error
 }
+
+//validate membership 
+exports.validateMemberShip = (body)=>{
+  const {name , type , description} = body
+
+  const schema = Joi.object().keys({
+    name: Joi.string().min(3).max(150).required(),
+    type: Joi.string().required(),
+    description: Joi.string().required(),
+  })
+  const result = Joi.validate({ name, type, description}, schema);
+  
+  return result.error 
+}

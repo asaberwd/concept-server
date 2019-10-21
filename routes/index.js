@@ -13,7 +13,7 @@ const { addOrder, viewOrders, viewSingleOrder, getStatistics } = require('./../a
 const { addCompany, viewcompanies, viewSingleCompany, updateCompany } = require('./../app/controllers/shippingCompanyController')
 const { addCall, viewAllCalls, viewCallsByUser, viewCallsByLead, viewSingleCall } = require('./../app/controllers/callController')
 const { addSchedule, viewActiveSchedules, viewSingleSchdule , viewActiveUserSchedules } = require('./../app/controllers/scheduleController')
-
+const {addMemmberShip ,viewMemberShip , updateMemberShip ,viewSingleMemberShip} = require('./../app/controllers/memberShipController')
 
 const storage = multer.diskStorage({
     destination : './public/uploads',
@@ -284,7 +284,32 @@ router.put('/api/schedule/:id', (req,res)=>{
 })
 
 
+// type  post 
+// add membership
 
+router.post('/api/membership' , (req,res)=>{
+    addMemmberShip(req,res)
+})
+
+
+// type   get
+// view memberships
+router.get('/api/viewmembership',(req,res)=>{
+    viewMemberShip(req,res)
+})
+
+//type   get 
+// view singlememberships
+
+router.get('/api/membership/:id',(req,res)=>{
+    viewSingleMemberShip(req,res)
+})
+
+//type  Put
+//Update membership
+router.put('/api/membership/:id',(req,res)=>{
+    updateMemberShip(req,res)
+})
 
 
 module.exports = router
